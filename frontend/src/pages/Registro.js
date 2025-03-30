@@ -1,34 +1,71 @@
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Usamos useNavigate en lugar de useHistory
 
 const Registro = () => {
-    const [nombre, setNombre] = useState("");
-    const [email, setEmail] = useState("");
-    const [contrasena, setContrasena] = useState("");
-    const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  // Usamos useNavigate para redirigir a otra página
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.post("http://localhost:5000/api/auth/registro", { nombre, email, contrasena });
-            navigate("/");
-        } catch (err) {
-            console.error("Error en el registro:", err);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const response = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password, email })
+      });
 
-    return (
-        <div>
-            <h2>Registro</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input type="password" placeholder="Contraseña" value={contrasena} onChange={(e) => setContrasena(e.target.value)} />
-                <button type="submit">Registrarse</button>
-            </form>
-        </div>
-    );
+    if (response.ok) {
+      alert("Usuario registrado con éxito");
+
+      // Limpiar los campos después del registro
+      setUsername("");
+      setEmail("");
+      setPassword("");
+    } else {
+      alert("Error al registrar el usuario");
+    }
+  };
+
+  // Función para redirigir al login
+  const redirectToLogin = () => {
+    navigate("/"); // Cambia "/login" a la ruta correspondiente en tu proyecto
+  };
+
+  return (
+    <div>
+      <h2>Registro de Usuario</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Usuario"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Registrarse</button>
+      </form>
+
+      {/* Botón para ir al login */}
+      <button onClick={redirectToLogin}>Volver al Login</button>
+    </div>
+  );
 };
 
 export default Registro;
