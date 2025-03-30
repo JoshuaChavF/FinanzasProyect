@@ -20,7 +20,7 @@ const Login = () => {
 
     if (response.ok) {
       // Si el inicio de sesión es exitoso, redirige al usuario a la siguiente página
-      navigate("/dashboard"); // Reemplaza con la ruta a la que quieras redirigir
+      navigate("/dashboard"); // 
     } else {
       const data = await response.text();
       setError(data); // Muestra el error si el login falla
