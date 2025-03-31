@@ -1,46 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Ingresos = () => {
-  const [monto, setMonto] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [descripcion, setDescripcion] = useState("");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("Salario");
+  const [ingresos, setIngresos] = useState([]);
+  const userId = localStorage.getItem("userId"); // Obtener el usuario autenticado
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/transactions?userId=${userId}&type=ingreso`)
+      .then((res) => res.json())
+      .then((data) => setIngresos(data));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const response = await fetch("http://localhost:5000/api/transactions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        type: "ingreso",
+        category,
+        amount: parseFloat(amount),
+      }),
+    });
 
-    // Lógica para guardar los ingresos en la base de datos
-    // Debes hacer una petición POST al backend para guardar los datos.
-
-    console.log({ monto, categoria, descripcion });
-    // Resetear campos
-    setMonto("");
-    setCategoria("");
-    setDescripcion("");
+    if (response.ok) {
+      alert("Ingreso registrado exitosamente");
+      setAmount("");
+      setIngresos([...ingresos, { category, amount }]);
+    } else {
+      alert("Error al registrar el ingreso");
+    }
   };
 
   return (
     <div>
-      <h2>Registrar Ingreso</h2>
+      <h2>Registro de Ingresos</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="number"
           placeholder="Monto"
-          value={monto}
-          onChange={(e) => setMonto(e.target.value)}
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
         />
-        <input
-          type="text"
-          placeholder="Categoría"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
-        />
-        <textarea
-          placeholder="Descripción"
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-        />
-        <button type="submit">Guardar Ingreso</button>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="Salario">Salario</option>
+          <option value="Inversiones">Inversiones</option>
+          <option value="Freelance">Freelance</option>
+          <option value="Bonos">Bonos</option>
+          <option value="Otros">Otros</option>
+        </select>
+        <button type="submit">Agregar Ingreso</button>
       </form>
+      <h3>Historial de Ingresos</h3>
+      <ul>
+        {ingresos.map((ingreso, index) => (
+          <li key={index}>{ingreso.category}: ${ingreso.amount}</li>
+        ))}
+      </ul>
     </div>
   );
 };
