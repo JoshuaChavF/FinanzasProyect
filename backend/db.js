@@ -1,11 +1,13 @@
+require("dotenv").config();
 const sql = require("mssql");
 
 const dbConfig = {
-    user: "sa",
-    password: "1234",
-    server: "localhost",
-    database: "FinanzasProyectDB",
-    options: { encrypt: false }
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER,
+    port: parseInt(process.env.PORT, 10),  
+    database: process.env.DB_DATABASE,
+    options: { encrypt: false, trustServerCertificate: true }
 };
 
 async function connectDB() {

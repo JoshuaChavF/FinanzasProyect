@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Menu from "../components/Menu"; // Importar el componente Menu
 
 const Ingresos = () => {
   const [amount, setAmount] = useState("");
@@ -10,7 +11,7 @@ const Ingresos = () => {
     fetch(`http://localhost:5000/api/transactions?userId=${userId}&type=ingreso`)
       .then((res) => res.json())
       .then((data) => setIngresos(data));
-  }, []);
+  }, [userId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +31,7 @@ const Ingresos = () => {
     if (response.ok) {
       alert("Ingreso registrado exitosamente");
       setAmount("");
-      setIngresos([...ingresos, { category, amount }]);
+      setIngresos([...ingresos, { category, amount: parseFloat(amount) }]);
     } else {
       alert("Error al registrar el ingreso");
     }
@@ -38,6 +39,8 @@ const Ingresos = () => {
 
   return (
     <div>
+      <Menu /> {/* Agregar el componente Menu aquí */}
+
       <h2>Registro de Ingresos</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -55,6 +58,7 @@ const Ingresos = () => {
         </select>
         <button type="submit">Agregar Ingreso</button>
       </form>
+
       <h3>Historial de Ingresos</h3>
       <ul>
         {ingresos.map((ingreso, index) => (

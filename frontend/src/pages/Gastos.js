@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectItem } from "@/components/ui/select";
+import { Card, CardContent } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
+import { Select, SelectItem } from "../components/ui/Select";
 import { toast } from "react-toastify";
+import Menu from "../components/Menu";
 
 const Gastos = () => {
   const [amount, setAmount] = useState("");
@@ -61,6 +62,7 @@ const Gastos = () => {
 
   return (
     <div className="p-6">
+      <Menu />
       <h2 className="text-xl font-bold mb-4">Registro de Gastos</h2>
       <Card className="mb-4">
         <CardContent>
@@ -74,9 +76,13 @@ const Gastos = () => {
             />
             <Select value={category} onChange={(e) => setCategory(e.target.value)} required>
               <option value="">Seleccionar categoría</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
+              {Array.isArray(categories) && categories.length > 0 ? (
+                categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))
+              ) : (
+                <option disabled>Cargando categorías...</option>
+              )}
             </Select>
             <Input
               type="text"

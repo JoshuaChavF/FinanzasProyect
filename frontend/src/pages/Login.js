@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom'; // Usamos useNavigate para redirigir después de iniciar sesión
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -19,11 +19,10 @@ const Login = () => {
     });
 
     if (response.ok) {
-      // Si el inicio de sesión es exitoso, redirige al usuario a la siguiente página
-      navigate("/dashboard"); // 
+      navigate("/dashboard");
     } else {
       const data = await response.text();
-      setError(data); // Muestra el error si el login falla
+      setError(data);
     }
   };
 
@@ -46,7 +45,12 @@ const Login = () => {
         <button type="submit">Iniciar sesión</button>
       </form>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mostrar error si existe */}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <div style={{ marginTop: "10px" }}>
+        <button onClick={() => navigate("/registro")}>Registrarse</button>
+        <button onClick={() => navigate("/recuperar")}>Olvidé mi contraseña</button>
+      </div>
     </div>
   );
 };

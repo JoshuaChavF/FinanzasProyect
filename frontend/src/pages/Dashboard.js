@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
+import Menu from "../components/Menu"; // Asegúrate de tener el componente Menu importado
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -39,10 +40,10 @@ const Dashboard = () => {
   };
 
   const pieChartData = {
-    labels: transactions.map((t) => t.category),
+    labels: transactions.length ? transactions.map((t) => t.category) : ["Sin datos"],
     datasets: [
       {
-        data: transactions.map((t) => t.amount),
+        data: transactions.length ? transactions.map((t) => t.amount) : [0],
         backgroundColor: ["#2196F3", "#FFC107", "#8BC34A", "#FF5722"],
       },
     ],
@@ -50,7 +51,10 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+      <Menu /> {/* Asegúrate de que el menú esté aquí */}
+
       <h2>Panel de Control</h2>
+
       <div className="summary">
         <h3>Resumen Financiero</h3>
         <p>Ingresos: ₡{summary.ingresos.toFixed(2)}</p>
@@ -72,9 +76,15 @@ const Dashboard = () => {
       <div className="accounts">
         <h3>Cuentas y Saldos</h3>
         <ul>
-          {accounts.map((account) => (
-            <li key={account.id}>{account.name}: ₡{account.balance.toFixed(2)}</li>
-          ))}
+          {accounts.length > 0 ? (
+            accounts.map((account) => (
+              <li key={account.id}>
+                {account.name}: ₡{account.balance.toFixed(2)}
+              </li>
+            ))
+          ) : (
+            <li>No hay cuentas disponibles.</li>
+          )}
         </ul>
       </div>
 

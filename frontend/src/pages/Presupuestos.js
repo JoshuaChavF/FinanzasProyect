@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Menu from "../components/Menu"; // Importar el componente Menu
 
 const Presupuestos = () => {
   const [presupuestos, setPresupuestos] = useState([]);
@@ -48,13 +49,16 @@ const Presupuestos = () => {
 
   return (
     <div>
+      <Menu /> {/* Agregar el componente Menu aquí */}
+
       <h2>Presupuestos y Metas Financieras</h2>
 
       <h3>Presupuestos</h3>
       <ul>
         {presupuestos.map((p) => (
           <li key={p.id}>
-            {p.categoria}: ${p.gastado} / ${p.monto} {p.gastado > p.monto && <span style={{ color: "red" }}>¡Presupuesto excedido!</span>}
+            {p.categoria}: ${p.gastado} / ${p.monto}{" "}
+            {p.gastado > p.monto && <span style={{ color: "red" }}>¡Presupuesto excedido!</span>}
           </li>
         ))}
       </ul>
